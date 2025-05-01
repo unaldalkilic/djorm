@@ -52,11 +52,11 @@ public abstract class Connector {
         if (obj == null) return false;
         if (obj.getClass() != this.getClass()) return false;
         Connector temp = (Connector) obj;
-        return host.equals(temp.getHost()) && port == temp.getPort() && user.equals(temp.getUser()) && password.equals(temp.getPassword()) && database_name.equals(temp.getDatabase_name()) && ();
+        return host.equals(temp.getHost()) && port == temp.getPort() && user.equals(temp.getUser()) && password.equals(temp.getPassword()) && database_name.equals(temp.getDatabase_name()) && (type == temp.get_type());
     }
 
     @Override
     public String toString() {
-        return host + ":" + port + "/" + database_name + "?user=" + user + "&password=" + password;
+        return type.toString()+"@"+host + ":" + port + "/" + database_name + "?user=" + user + "&password=" + password;
     }
 }

@@ -13,4 +13,15 @@ public enum DatabaseType {
             default -> throw new IllegalStateException("Invalid DatabaseType! It has no DatabaseCategory.");
         };
     }
+
+    @Override
+    public String toString() {
+        return switch (this) {
+            case MYSQL -> "mysql";
+            case POSTGRESQL -> "postgresql";
+            case MSQL -> "msql";
+            case MONGO -> "mongo";
+            default -> throw new IllegalStateException("Invalid DatabaseType! Cannot get toString()");
+        };
+    }
 }
