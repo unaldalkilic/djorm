@@ -1,5 +1,6 @@
 package org.unaldalkilic.util.execution_result;
 
+import org.unaldalkilic.enums.DatabaseCategory;
 import org.unaldalkilic.enums.DatabaseType;
 
 import java.sql.ResultSet;
@@ -11,7 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 public class SQLExecutionResult extends ExecutionResult{
-    public SQLExecutionResult(DatabaseType database_type, int affected_rows, List<Map<String, Object>> results, Exception exception) {
+    // Cannot create directly from the constructor, need to use factory methods!
+    private SQLExecutionResult(DatabaseType database_type, int affected_rows, List<Map<String, Object>> results, Exception exception) {
         super(database_type, affected_rows, results, exception);
     }
 
@@ -19,6 +21,8 @@ public class SQLExecutionResult extends ExecutionResult{
     public static SQLExecutionResult from_result_set(ResultSet rs, DatabaseType database_type) {
         if (database_type == null)
             throw new IllegalArgumentException("DatabaseType argument cannot be null");
+        if (! is_database_type_compatible(database_type))
+            throw new IllegalArgumentException("Given DatabaseType is not compatible with SQL");
 
         try {
             List<Map<String, Object>> parsed_result_set = parseResultSet(rs);
@@ -32,8 +36,20 @@ public class SQLExecutionResult extends ExecutionResult{
     public static SQLExecutionResult from_affected_rows(int affected_rows, DatabaseType database_type) {
         if (affected_rows < 0 || database_type == null)
             throw new IllegalArgumentException("DatabaseType cannot be null and affected_rows must be a non-negative integer.");
+        if (! is_database_type_compatible(database_type))
+            throw new IllegalArgumentException("Given DatabaseType is not compatible with SQL");
 
         return new SQLExecutionResult(database_type, affected_rows, null, null);
+    }
+
+    // Static factory method for results of exceptions
+    public static SQLExecutionResult from_exception(Exception exception, DatabaseType database_type) {
+        if (exception == null || database_type == null)
+            throw new IllegalArgumentException("Exception and DatabaseType arguments cannot be null");
+        if (! is_database_type_compatible(database_type))
+            throw new IllegalArgumentException("Given DatabaseType is not compatible with SQL");
+
+        return new SQLExecutionResult(database_type, 0, null, exception);
     }
 
     private static List<Map<String, Object>> parseResultSet(ResultSet rs) throws SQLException {
@@ -51,5 +67,9 @@ public class SQLExecutionResult extends ExecutionResult{
             list.add(row);
         }
         return list;
+    }
+
+    private static boolean is_database_type_compatible(DatabaseType type) {
+        return type.get_category() == DatabaseCategory.SQL;
     }
 }
