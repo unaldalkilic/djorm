@@ -1,13 +1,17 @@
 package org.unaldalkilic.command.command_filter;
 
 public class CommandFilterLeafNode extends CommandFilterNode {
-    private final CommandFilter filter;
+    private final String field;
+    private final CommandOperator operator;
+    private final Object value;
 
-    public CommandFilterLeafNode(CommandFilter filter) {
-        this.filter = filter;
+    public CommandFilterLeafNode(String field, CommandOperator operator, Object value) {
+        this.field = field;
+        this.operator = operator;
+        this.value = value;
     }
 
-    public CommandFilter getFilter() {
-        return filter;
-    }
+    public String getField() { return field; }
+    public CommandOperator getOperator() { return operator; }
+    public Object getValue() { return value; }
 }
