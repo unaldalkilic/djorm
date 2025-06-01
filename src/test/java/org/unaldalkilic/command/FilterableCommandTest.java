@@ -10,16 +10,7 @@ import static org.unaldalkilic.command.MockCommandGenerator.and;
 import static org.unaldalkilic.command.MockCommandGenerator.or;
 import static org.unaldalkilic.command.MockCommandGenerator.lessThan;
 
-public class CommandTest {
-    @Test
-    public void testRawDeleteCommand() {
-        MockCommandGenerator generator = new MockCommandGenerator();
-        Command delete_command = generator.delete("students");
-
-        assertEquals("students", delete_command.getTarget());
-        assertEquals(CommandType.DELETE, delete_command.getCommandType());
-    }
-
+public class FilterableCommandTest {
     @Test
     public void testSimpleFilterableCommand() {
         MockCommandGenerator generator = new MockCommandGenerator();
