@@ -1,7 +1,6 @@
 package org.unaldalkilic.command;
 
 import org.junit.jupiter.api.Test;
-import org.unaldalkilic.command.command_filter.FilterableCommand;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +25,7 @@ public class RawCommandTest {
            put("age", 23);
         }};
         MockCommandGenerator generator = new MockCommandGenerator();
-        InsertCommand insert_command = generator.insert("students", insert_data);
+        InsertCommand insert_command = (InsertCommand) generator.insert("students", insert_data);
 
         assertEquals(CommandType.INSERT, insert_command.getCommandType());
         assertEquals("students", insert_command.getTarget());
@@ -53,7 +52,7 @@ public class RawCommandTest {
             put("age", 23);
         }};
         MockCommandGenerator generator = new MockCommandGenerator();
-        UpdateCommand update_command = generator.update("students", update_data);
+        UpdateCommand update_command = (UpdateCommand) generator.update("students", update_data);
 
         assertEquals(CommandType.UPDATE, update_command.getCommandType());
         assertEquals("students", update_command.getTarget());

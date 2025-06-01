@@ -3,7 +3,7 @@ package org.unaldalkilic.command.command_sort;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CommandSort implements SortableCommand {
+public class CommandSort implements SortableBasis {
     private final Map<String, CommandSortDirection> sorts;
 
     public CommandSort() {
@@ -15,7 +15,7 @@ public class CommandSort implements SortableCommand {
     }
 
     @Override
-    public SortableCommand sort(Object... sorts) {
+    public SortableBasis sort(Object... sorts) {
         for (Object obj : sorts) {
             switch (obj) {
                 case Map<?, ?> map -> {

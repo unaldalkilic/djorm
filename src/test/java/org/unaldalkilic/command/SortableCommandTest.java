@@ -4,14 +4,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import org.unaldalkilic.command.command_sort.CommandSortDirection;
-import static org.unaldalkilic.command.command_sort.SortableCommand.asc;
-import static org.unaldalkilic.command.command_sort.SortableCommand.desc;
+import org.unaldalkilic.command.command_sort.SortableBasis;
+import org.unaldalkilic.command.command_sort.SortableCommand;
+
+import static org.unaldalkilic.command.command_sort.SortableBasis.asc;
+import static org.unaldalkilic.command.command_sort.SortableBasis.desc;
 
 public class SortableCommandTest {
     @Test
     public void testSimpleSortableCommand() {
         MockCommandGenerator generator = new MockCommandGenerator();
-        SelectCommand select_command = generator.select("students");
+        SortableCommand select_command = (SortableCommand) generator.select("students");
         select_command.sort("name", "age");
 
         assertEquals(2, select_command.getCommandSort().getSorts().size());
@@ -24,7 +27,7 @@ public class SortableCommandTest {
     @Test
     public void testSimpleSortableCommandWithASC() {
         MockCommandGenerator generator = new MockCommandGenerator();
-        SelectCommand select_command = generator.select("students");
+        SortableCommand select_command = (SortableCommand) generator.select("students");
         select_command.sort(asc("name", "age"));
 
         assertEquals(2, select_command.getCommandSort().getSorts().size());
@@ -37,7 +40,7 @@ public class SortableCommandTest {
     @Test
     public void testSimpleSortableCommandWithDESC() {
         MockCommandGenerator generator = new MockCommandGenerator();
-        SelectCommand select_command = generator.select("students");
+        SortableCommand select_command = (SortableCommand) generator.select("students");
         select_command.sort(desc("name", "age"));
 
         assertEquals(2, select_command.getCommandSort().getSorts().size());
@@ -50,7 +53,7 @@ public class SortableCommandTest {
     @Test
     public void testMixedASCDESCSortableCommand() {
         MockCommandGenerator generator = new MockCommandGenerator();
-        SelectCommand select_command = generator.select("students");
+        SortableCommand select_command = (SortableCommand) generator.select("students");
         select_command.sort(desc("name", "age"), asc("surname"));
 
         assertEquals(3, select_command.getCommandSort().getSorts().size());
@@ -65,7 +68,7 @@ public class SortableCommandTest {
     @Test
     public void testComplexSortableCommand() {
         MockCommandGenerator generator = new MockCommandGenerator();
-        SelectCommand select_command = generator.select("students");
+        SortableCommand select_command = (SortableCommand) generator.select("students");
         select_command.sort("name", desc("surname"), "age", asc("something"), desc("blabla"));
 
         assertEquals(5, select_command.getCommandSort().getSorts().size());
