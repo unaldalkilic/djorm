@@ -1,20 +1,18 @@
 package org.unaldalkilic.command;
 
-import org.unaldalkilic.command.command_filter.CommandFilterNode;
 import org.unaldalkilic.command.command_filter.FilterableCommand;
 import org.unaldalkilic.command.command_sort.CommandSort;
 import org.unaldalkilic.command.command_sort.SortableCommand;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class SelectCommand extends FilterableCommand implements SortableCommand {
-    private final List<CommandSort> commandSortList;
+    private final CommandSort commandSort;
 
     public SelectCommand(String target) {
         super(target);
-        commandSortList = new ArrayList<>();
+        commandSort = new CommandSort();
     }
+
+    public CommandSort getCommandSort() { return commandSort; }
 
     @Override
     public CommandType getCommandType() {
@@ -22,12 +20,8 @@ public class SelectCommand extends FilterableCommand implements SortableCommand 
     }
 
     @Override
-    public List<CommandSort> getCommandSortList() {
-        return commandSortList;
-    }
-
-    @Override
-    public void addToCommandSortList(CommandSort commandSort) {
-        commandSortList.add(commandSort);
+    public SortableCommand sort(Object... sorts) {
+        commandSort.sort(sorts); // Change the inner state of the CommandSort object
+        return this; // Return Command object; which means itself
     }
 }

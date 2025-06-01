@@ -26,15 +26,15 @@ public class RawCommandTest {
            put("age", 23);
         }};
         MockCommandGenerator generator = new MockCommandGenerator();
-        Command insert_command = generator.insert("students", insert_data);
+        InsertCommand insert_command = generator.insert("students", insert_data);
 
         assertEquals(CommandType.INSERT, insert_command.getCommandType());
         assertEquals("students", insert_command.getTarget());
-        assertEquals(2, ((InsertCommand) insert_command).getInsertData().size());
-        assertTrue(((InsertCommand) insert_command).getInsertData().containsKey("name"));
-        assertTrue(((InsertCommand) insert_command).getInsertData().containsKey("age"));
-        assertEquals("Ünal", ((InsertCommand) insert_command).getInsertData().get("name"));
-        assertEquals(23, ((InsertCommand) insert_command).getInsertData().get("age"));
+        assertEquals(2, insert_command.getInsertData().size());
+        assertTrue(insert_command.getInsertData().containsKey("name"));
+        assertTrue(insert_command.getInsertData().containsKey("age"));
+        assertEquals("Ünal", insert_command.getInsertData().get("name"));
+        assertEquals(23, insert_command.getInsertData().get("age"));
     }
 
     @Test
@@ -53,14 +53,14 @@ public class RawCommandTest {
             put("age", 23);
         }};
         MockCommandGenerator generator = new MockCommandGenerator();
-        FilterableCommand update_command = generator.update("students", update_data);
+        UpdateCommand update_command = generator.update("students", update_data);
 
         assertEquals(CommandType.UPDATE, update_command.getCommandType());
         assertEquals("students", update_command.getTarget());
-        assertEquals(2, ((UpdateCommand) update_command).getUpdateData().size());
-        assertTrue(((UpdateCommand) update_command).getUpdateData().containsKey("name"));
-        assertTrue(((UpdateCommand) update_command).getUpdateData().containsKey("age"));
-        assertEquals("Ünal", ((UpdateCommand) update_command).getUpdateData().get("name"));
-        assertEquals(23, ((UpdateCommand) update_command).getUpdateData().get("age"));
+        assertEquals(2, update_command.getUpdateData().size());
+        assertTrue(update_command.getUpdateData().containsKey("name"));
+        assertTrue(update_command.getUpdateData().containsKey("age"));
+        assertEquals("Ünal", update_command.getUpdateData().get("name"));
+        assertEquals(23, update_command.getUpdateData().get("age"));
     }
 }
