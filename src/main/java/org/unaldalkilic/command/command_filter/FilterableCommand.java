@@ -1,6 +1,16 @@
 package org.unaldalkilic.command.command_filter;
 
-public interface FilterableCommand {
-    public CommandFilterNode getRootFilterNode();
-    public void setRootFilterNode(CommandFilterNode rootFilterNode);
+import org.unaldalkilic.command.Command;
+
+public abstract class FilterableCommand extends Command {
+    private CommandFilterNode rootFilter;
+
+    public FilterableCommand(String target) {
+        super(target);
+    }
+
+    public CommandFilterNode getRootFilterNode() {
+        return rootFilter;
+    }
+    public FilterableCommand where(CommandFilterNode filter_node) {rootFilter = filter_node; return this;}
 }

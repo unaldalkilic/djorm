@@ -5,9 +5,8 @@ import org.unaldalkilic.command.command_filter.FilterableCommand;
 
 import java.util.Map;
 
-public class UpdateCommand extends Command implements FilterableCommand {
+public class UpdateCommand extends FilterableCommand {
     private final Map<String, Object> updateData;
-    private CommandFilterNode rootFilter;
 
     public UpdateCommand(String target, Map<String, Object> updateData) {
         super(target);
@@ -21,15 +20,5 @@ public class UpdateCommand extends Command implements FilterableCommand {
 
     public Map<String, Object> getUpdateData() {
         return updateData;
-    }
-
-    @Override
-    public CommandFilterNode getRootFilterNode() {
-        return rootFilter;
-    }
-
-    @Override
-    public void setRootFilterNode(CommandFilterNode rootFilterNode) {
-        rootFilter = rootFilterNode;
     }
 }

@@ -6,8 +6,5 @@ public abstract class CommandFilterNode {
     public boolean isNegated() {
         return negated;
     }
-
-    public void setNegated(boolean negated) {
-        this.negated = negated;
-    }
+    public CommandFilterNode not() {negated = !negated; return this;}
 }

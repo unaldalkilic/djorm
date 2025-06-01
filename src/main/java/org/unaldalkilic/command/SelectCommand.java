@@ -8,8 +8,7 @@ import org.unaldalkilic.command.command_sort.SortableCommand;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SelectCommand extends Command implements FilterableCommand, SortableCommand {
-    private CommandFilterNode rootFilter;
+public class SelectCommand extends FilterableCommand implements SortableCommand {
     private final List<CommandSort> commandSortList;
 
     public SelectCommand(String target) {
@@ -20,16 +19,6 @@ public class SelectCommand extends Command implements FilterableCommand, Sortabl
     @Override
     public CommandType getCommandType() {
         return CommandType.SELECT;
-    }
-
-    @Override
-    public CommandFilterNode getRootFilterNode() {
-        return rootFilter;
-    }
-
-    @Override
-    public void setRootFilterNode(CommandFilterNode rootFilterNode) {
-        this.rootFilter = rootFilterNode;
     }
 
     @Override
