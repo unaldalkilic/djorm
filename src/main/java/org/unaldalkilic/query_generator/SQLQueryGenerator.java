@@ -1,8 +1,6 @@
 package org.unaldalkilic.query_generator;
 
-import org.unaldalkilic.command.Command;
-import org.unaldalkilic.command.CommandType;
-import org.unaldalkilic.command.SelectCommand;
+import org.unaldalkilic.command.*;
 import org.unaldalkilic.command.command_filter.CommandFilterLeafNode;
 import org.unaldalkilic.command.command_filter.CommandFilterNode;
 import org.unaldalkilic.command.command_filter.CommandLogicalFilterGroupNode;
@@ -18,8 +16,7 @@ public abstract class SQLQueryGenerator {
             throw new IllegalArgumentException("Given command is not a SELECT command!");
         SelectCommand select_command = (SelectCommand) command;
 
-        String result = "SELECT * FROM "; // TODO assume * for now; then the select filters will be added.
-        result = select_command.getTarget() + " ";
+        String result = "SELECT * FROM " + select_command.getTarget() + " "; // TODO assume * for now; then the select filters will be added.
 
         // Check for CommandFilter WHERE
         if (select_command.getCommandFilter() != null) {
@@ -34,6 +31,73 @@ public abstract class SQLQueryGenerator {
 
         result += ";";
         return result;
+    }
+
+    public static String delete(Command command) {
+        if (command.getCommandType() != CommandType.DELETE)
+            throw new IllegalArgumentException("Given command is not a DELETE command!");
+        DeleteCommand delete_command = (DeleteCommand) command;
+
+        String result = "DELETE FROM " + delete_command.getTarget() + " ";
+
+        // Check for CommandFilter WHERE
+        if (delete_command.getCommandFilter() != null) {
+            result += "WHERE ";
+            CommandFilterNode filter_root = delete_command.getCommandFilter().getRootFilterNode();
+            result += filter_extension(filter_root) + " ";
+        }
+
+        result += ";";
+        return result;
+    }
+
+    public static String insert(Command command) {
+        if (command.getCommandType() != CommandType.INSERT)
+            throw new IllegalArgumentException("Given command is not a INSERT command!");
+        InsertCommand insert_command = (InsertCommand) command;
+
+        StringBuilder result = new StringBuilder();
+        result.append("INSERT INTO ").append(insert_command.getTarget()).append(" ");
+
+        result.append("(");
+        for (String features: insert_command.getInsertData().keySet())
+            result.append(features).append(",");
+        result.deleteCharAt(-1);
+
+        result.append(" ").append("VALUES").append(" ");
+
+        result.append("(");
+        for (Object values: insert_command.getInsertData().values())
+            result.append(values.toString()).append(",");
+        result.deleteCharAt(-1);
+
+        result.append(";");
+        return result.toString();
+    }
+
+    public static String update(Command command) {
+        if (command.getCommandType() != CommandType.UPDATE)
+            throw new IllegalArgumentException("Given command is not a UPDATE command!");
+        UpdateCommand update_command = (UpdateCommand) command;
+
+        StringBuilder result = new StringBuilder();
+        result.append("UPDATE ").append(update_command.getTarget()).append(" ").append("SET").append(" ");
+
+        for (String feature: update_command.getUpdateData().keySet())
+            result.append(feature).append("=").append(update_command.getUpdateData().get(feature).toString()).append(",");
+        result.deleteCharAt(-1);
+
+        result.append(" ");
+
+        // Check for CommandFilter WHERE
+        if (update_command.getCommandFilter() != null) {
+            result.append("WHERE ");
+            CommandFilterNode filter_root = update_command.getCommandFilter().getRootFilterNode();
+            result.append(filter_extension(filter_root)).append(" ");
+        }
+
+        result.append(";");
+        return result.toString();
     }
 
     private static String filter_extension(CommandFilterNode filter_root) {
