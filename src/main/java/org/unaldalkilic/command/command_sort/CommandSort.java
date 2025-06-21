@@ -13,6 +13,7 @@ public class CommandSort implements SortableBasis {
     public Map<String, CommandSortDirection> getSorts() {
         return sorts;
     }
+    public boolean isEmpty() { return sorts.isEmpty(); }
 
     @Override
     public SortableBasis sort(Object... sorts) {

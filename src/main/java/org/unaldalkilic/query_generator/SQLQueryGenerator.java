@@ -19,14 +19,14 @@ public abstract class SQLQueryGenerator {
         String result = "SELECT * FROM " + select_command.getTarget() + " "; // TODO assume * for now; then the select filters will be added.
 
         // Check for CommandFilter WHERE
-        if (select_command.getCommandFilter() != null) {
+        if (!select_command.getCommandFilter().isEmpty()) {
             result += "WHERE ";
             CommandFilterNode filter_root = select_command.getCommandFilter().getRootFilterNode();
             result += filter_extension(filter_root) + " ";
         }
 
         // Check for CommandSort ORDER BY
-        if (select_command.getCommandSort() != null)
+        if (!select_command.getCommandSort().isEmpty())
             result += "ORDER BY " + sorting_extension(select_command) + " ";
 
         result += ";";
@@ -41,7 +41,7 @@ public abstract class SQLQueryGenerator {
         String result = "DELETE FROM " + delete_command.getTarget() + " ";
 
         // Check for CommandFilter WHERE
-        if (delete_command.getCommandFilter() != null) {
+        if (!delete_command.getCommandFilter().isEmpty()) {
             result += "WHERE ";
             CommandFilterNode filter_root = delete_command.getCommandFilter().getRootFilterNode();
             result += filter_extension(filter_root) + " ";
@@ -90,7 +90,7 @@ public abstract class SQLQueryGenerator {
         result.append(" ");
 
         // Check for CommandFilter WHERE
-        if (update_command.getCommandFilter() != null) {
+        if (!update_command.getCommandFilter().isEmpty()) {
             result.append("WHERE ");
             CommandFilterNode filter_root = update_command.getCommandFilter().getRootFilterNode();
             result.append(filter_extension(filter_root)).append(" ");

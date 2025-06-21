@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import org.unaldalkilic.command.command_sort.CommandSortDirection;
-import org.unaldalkilic.command.command_sort.SortableBasis;
 import org.unaldalkilic.command.command_sort.SortableCommand;
+import org.unaldalkilic.test_utils.MockCommandGenerator;
 
 import static org.unaldalkilic.command.command_sort.SortableBasis.asc;
 import static org.unaldalkilic.command.command_sort.SortableBasis.desc;

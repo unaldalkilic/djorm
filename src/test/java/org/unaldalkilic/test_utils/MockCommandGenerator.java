@@ -1,10 +1,10 @@
-package org.unaldalkilic.command;
+package org.unaldalkilic.test_utils;
 
-import org.unaldalkilic.command.command_filter.*;
+import org.unaldalkilic.command.DeleteCommand;
+import org.unaldalkilic.command.InsertCommand;
+import org.unaldalkilic.command.SelectCommand;
+import org.unaldalkilic.command.UpdateCommand;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 public class MockCommandGenerator {
