@@ -30,7 +30,7 @@ public class UpdateCommand extends Command implements FilterableCommand {
     }
 
     @Override
-    public FilterableBasis where(CommandFilterNode filter_node) {
+    public UpdateCommand where(CommandFilterNode filter_node) {
         commandFilter.where(filter_node); // Change the inner state of the CommandFilter object
         return this; // Return Command object; which means itself
     }

@@ -22,7 +22,7 @@ public class DeleteCommand extends Command implements FilterableCommand {
     }
 
     @Override
-    public FilterableBasis where(CommandFilterNode filter_node) {
+    public DeleteCommand where(CommandFilterNode filter_node) {
         commandFilter.where(filter_node); // Change the inner state of the CommandFilter object
         return this; // Return Command object; which means itself
     }
