@@ -30,13 +30,13 @@ public class SelectCommand extends Command implements FilterableCommand, Sortabl
     }
 
     @Override
-    public FilterableBasis where(CommandFilterNode filter_node) {
+    public SelectCommand where(CommandFilterNode filter_node) {
         commandFilter.where(filter_node); // Change the inner state of the CommandFilter object
         return this; // Return Command object; which means itself
     }
 
     @Override
-    public SortableBasis sort(Object... sorts) {
+    public SelectCommand sort(Object... sorts) {
         commandSort.sort(sorts); // Change the inner state of the CommandSort object
         return this; // Return Command object; which means itself
     }
