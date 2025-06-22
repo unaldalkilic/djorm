@@ -47,6 +47,16 @@ public class RawCommandTest {
     }
 
     @Test
+    public void testRawSelectWithSelectedFeatures() {
+        MockCommandGenerator generator = new MockCommandGenerator();
+        SelectCommand select_command = generator.select("students", "name", "age");
+
+        assertEquals(2, select_command.getSelected_features().size());
+        assertEquals("name", select_command.getSelected_features().getFirst());
+        assertEquals("age", select_command.getSelected_features().getLast());
+    }
+
+    @Test
     public void testRawUpdateCommand() {
         Map<String, Object> update_data = new HashMap<>() {{
             put("name", "Ünal");
