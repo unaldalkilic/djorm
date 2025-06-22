@@ -17,6 +17,7 @@ public class MockCommandGenerator {
     public SelectCommand select(String target) {
         return new SelectCommand(target);
     }
+    public SelectCommand select(String target, String... selected_features) { return new SelectCommand(target, List.of(selected_features)); }
     public UpdateCommand update(String target, Map<String, Object> update_data) {
         return new UpdateCommand(target, update_data);
     }
