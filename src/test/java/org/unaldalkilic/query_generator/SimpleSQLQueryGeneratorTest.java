@@ -10,22 +10,32 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SimpleSQLQueryGeneratorTest {
+
+    private final QueryGenerator[] dialects = new QueryGenerator[]{
+            MySqlGenerator.instance(),
+            PostgreSqlGenerator.instance()
+    };
+
     @Test
     public void testSimpleSelectSQLQuery() {
         MockCommandGenerator generator = new MockCommandGenerator();
         Command command = generator.select("students");
-        String query = SQLQueryGenerator.select(command);
 
-        assertEquals("SELECT * FROM students ;", query);
+        for (QueryGenerator dialect : dialects) {
+            String query = dialect.select(command);
+            assertEquals("SELECT * FROM students ;", query, "Dialect: " + dialect.getClass().getSimpleName());
+        }
     }
 
     @Test
     public void testSimpleDeleteSQLCommand() {
         MockCommandGenerator generator = new MockCommandGenerator();
         Command command = generator.delete("students");
-        String command_str = SQLQueryGenerator.delete(command);
 
-        assertEquals("DELETE FROM students ;", command_str);
+        for (QueryGenerator dialect : dialects) {
+            String query = dialect.delete(command);
+            assertEquals("DELETE FROM students ;", query, "Dialect: " + dialect.getClass().getSimpleName());
+        }
     }
 
     @Test
@@ -37,8 +47,48 @@ public class SimpleSQLQueryGeneratorTest {
 
         MockCommandGenerator generator = new MockCommandGenerator();
         Command command = generator.update("students", update_data);
-        String command_str = SQLQueryGenerator.update(command);
 
-        assertEquals("UPDATE students SET name='Ünal',age=23;", command_str);
+        for (QueryGenerator dialect : dialects) {
+            String query = dialect.update(command);
+
+            String expected = "UPDATE students SET name='Ünal',age=23;";
+            assertEquals(expected, query, "Dialect: " + dialect.getClass().getSimpleName());
+        }
     }
+
+    @Test
+    public void testSimpleInsertCommand() {
+        Map<String, Object> insert_data = new HashMap<>() {{
+            put("name", "Ünal");
+            put("age", 23);
+        }};
+
+        MockCommandGenerator generator = new MockCommandGenerator();
+        Command command = generator.insert("students", insert_data);
+
+        for (QueryGenerator dialect : dialects) {
+            String query = dialect.insert(command);
+
+            String expected = "INSERT INTO students (name,age) VALUES ('Ünal',23);";
+            assertEquals(expected, query, "Dialect: " + dialect.getClass().getSimpleName());
+        }
+    }
+
+    @Test
+    public void testAutoCommandDispatch() {
+        Map<String, Object> update_data = new HashMap<>() {{
+            put("name", "Ünal");
+            put("age", 23);
+        }};
+
+        MockCommandGenerator generator = new MockCommandGenerator();
+        Command updateCommand = generator.update("students", update_data);
+
+        for (QueryGenerator dialect : dialects) {
+            String query = dialect.auto(updateCommand);
+            String expected = "UPDATE students SET name='Ünal',age=23;";
+            assertEquals(expected, query, "Dialect: " + dialect.getClass().getSimpleName());
+        }
+    }
+
 }
