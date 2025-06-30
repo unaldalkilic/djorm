@@ -6,6 +6,5 @@ public enum CommandOperator {
     LESS,
     GREATER_EQUAL,
     LESS_EQUAL,
-    IN,
     LIKE
 }
