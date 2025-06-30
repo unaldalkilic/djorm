@@ -9,13 +9,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class SimpleSQLQueryGeneratorTest {
-
-    private final QueryGenerator[] dialects = new QueryGenerator[]{
-            MySqlGenerator.instance(),
-            PostgreSqlGenerator.instance()
-    };
-
+public class SimpleSQLQueryGeneratorTest extends SQLQueryGeneratorUtil {
     @Test
     public void testSimpleSelectSQLQuery() {
         MockCommandGenerator generator = new MockCommandGenerator();
@@ -24,6 +18,17 @@ public class SimpleSQLQueryGeneratorTest {
         for (QueryGenerator dialect : dialects) {
             String query = dialect.select(command);
             assertEquals("SELECT * FROM students ;", query, "Dialect: " + dialect.getClass().getSimpleName());
+        }
+    }
+
+    @Test
+    public void testSimpleSelectWithSelectedFeaturesQuery() {
+        MockCommandGenerator generator = new MockCommandGenerator();
+        Command command = generator.select("students", "name", "age");
+
+        for (QueryGenerator dialect: dialects) {
+            String query = dialect.select(command);
+            assertEquals("SELECT name,age FROM students ;", query, "Dialect: " + dialect.getClass().getSimpleName());
         }
     }
 

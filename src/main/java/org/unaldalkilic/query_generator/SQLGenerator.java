@@ -32,7 +32,15 @@ public abstract class SQLGenerator implements QueryGenerator {
             throw new IllegalArgumentException("Given command is not a SELECT command!");
         SelectCommand select_command = (SelectCommand) command;
 
-        String result = "SELECT * FROM " + select_command.getTarget() + " "; // TODO assume * for now; then the select filters will be added.
+        String result = "";
+        if (select_command.getSelected_features().isEmpty())
+            result = "SELECT * FROM " + select_command.getTarget() + " ";
+        else {
+            StringJoiner joiner = new StringJoiner(",");
+            for (String feature: select_command.getSelected_features())
+                joiner.add(feature);
+            result = "SELECT " + joiner.toString() + " FROM " + select_command.getTarget() + " ";
+        }
 
         // Check for CommandFilter WHERE
         if (!select_command.getCommandFilter().isEmpty()) {
@@ -122,16 +130,19 @@ public abstract class SQLGenerator implements QueryGenerator {
     @Override
     public String filter_extension(CommandFilterNode filter_root) {
         StringBuilder result = new StringBuilder();
+        if (filter_root.isNegated())
+            result.append("NOT ");
+
         if (filter_root instanceof CommandFilterLeafNode temp) {
-            result.append(temp.getField()).append(" ");
+            result.append(temp.getField());
             switch (temp.getOperator()) {
-                case CommandOperator.EQUAL -> result.append("= ");
-                case CommandOperator.GREATER -> result.append("> ");
+                case CommandOperator.EQUAL -> result.append("=");
+                case CommandOperator.GREATER -> result.append(">");
                 // TODO case CommandOperator.IN -> result += "";
-                case CommandOperator.GREATER_EQUAL -> result.append(">= ");
-                case CommandOperator.LESS -> result.append("< ");
-                case CommandOperator.LESS_EQUAL -> result.append("<= ");
-                case CommandOperator.LIKE -> result.append("LIKE ");
+                case CommandOperator.GREATER_EQUAL -> result.append(">=");
+                case CommandOperator.LESS -> result.append("<");
+                case CommandOperator.LESS_EQUAL -> result.append("<=");
+                case CommandOperator.LIKE -> result.append("LIKE");
                 default -> throw new IllegalStateException("Undefined operator type for filter node");
             }
             result.append(formatValue(temp.getValue()));
