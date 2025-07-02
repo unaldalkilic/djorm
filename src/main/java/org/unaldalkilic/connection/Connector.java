@@ -1,14 +1,18 @@
 package org.unaldalkilic.connection;
 
 import org.unaldalkilic.enums.DatabaseType;
+import org.unaldalkilic.query_generator.MySqlGenerator;
+import org.unaldalkilic.query_generator.PostgreSqlGenerator;
+import org.unaldalkilic.query_generator.QueryGenerator;
 
-public abstract class Connector {
+public abstract class Connector implements ConnectorInterface {
     private final String host;
     private final int port;
     private final String user;
     private final String password;
     private final String database_name;
     private final DatabaseType type;
+    private int connection_timeout = 10;
 
     public Connector(String host, int port, String user, String password, String database_name, DatabaseType type) {
         this.host = host;
@@ -17,10 +21,6 @@ public abstract class Connector {
         this.password = password;
         this.database_name = database_name;
         this.type = type;
-    }
-
-    public Connector(Connector connector) {
-        this(connector.getHost(), connector.getPort(), connector.getUser(), connector.getPassword(), connector.getDatabase_name(), connector.get_type());
     }
 
     public String getHost() {
@@ -45,6 +45,21 @@ public abstract class Connector {
 
     public DatabaseType get_type() {
         return type;
+    }
+
+    public int get_connection_timeout() { return connection_timeout; }
+
+    public void set_connection_timeout(int timeout) {
+        if (timeout <= 0) throw new IllegalArgumentException("timeout argument must be a positive integer");
+        connection_timeout = timeout;
+    }
+
+    protected QueryGenerator query_generator_instance() {
+        return switch (type) {
+            case MYSQL -> MySqlGenerator.instance();
+            case POSTGRESQL -> PostgreSqlGenerator.instance();
+            default -> throw new IllegalStateException("Given database type has no query generator");
+        };
     }
 
     @Override
