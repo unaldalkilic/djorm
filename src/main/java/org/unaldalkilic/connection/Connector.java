@@ -12,7 +12,7 @@ public abstract class Connector implements ConnectorInterface {
     private final String password;
     private final String database_name;
     private final DatabaseType type;
-    private int connection_timeout = 10;
+    private int connection_timeout = 10; // second based
 
     public Connector(String host, int port, String user, String password, String database_name, DatabaseType type) {
         this.host = host;

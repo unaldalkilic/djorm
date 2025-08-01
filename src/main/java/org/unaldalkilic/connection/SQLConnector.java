@@ -15,6 +15,7 @@ import java.sql.Statement;
 
 public class SQLConnector extends Connector{
     private HikariDataSource dataSource;
+    private HikariConfig hikariConfig;
 
     private SQLConnector(String host, int port, String user, String password, String database_name, DatabaseType type) {
         super(host, port, user, password, database_name, type);
@@ -22,26 +23,24 @@ public class SQLConnector extends Connector{
     }
 
     private void hikariConfig() {
-        HikariConfig config = new HikariConfig();
-        config.setJdbcUrl(getJDBCUrl());
-        config.setUsername(getUser());
-        config.setPassword(getPassword());
+        hikariConfig = new HikariConfig();
+        hikariConfig.setJdbcUrl(getJDBCUrl());
+        hikariConfig.setUsername(getUser());
+        hikariConfig.setPassword(getPassword());
 
         // Performance optimization
-        config.addDataSourceProperty("cachePrepStmts", "true");
-        config.addDataSourceProperty("prepStmtCacheSize", "250");
-        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+        hikariConfig.addDataSourceProperty("cachePrepStmts", "true");
+        hikariConfig.addDataSourceProperty("prepStmtCacheSize", "250");
+        hikariConfig.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
 
         // Pool settings
-        config.setMinimumIdle(3);
-        config.setMaximumPoolSize(10);
-        config.setConnectionTimeout(get_connection_timeout());
-        config.setInitializationFailTimeout(-1); // For lazy initialize, do not create and test connections at object creation
-
-        dataSource = new HikariDataSource(config);
+        hikariConfig.setMinimumIdle(3);
+        hikariConfig.setMaximumPoolSize(10);
+        hikariConfig.setConnectionTimeout(3000);
+        hikariConfig.setInitializationFailTimeout(-1); // For lazy initialize, do not create and test connections at object creation
     }
 
-    public SQLConnector createSQLConnector(String host, int port, String user, String password, String database_name, DatabaseType type) {
+    public static SQLConnector createSQLConnector(String host, int port, String user, String password, String database_name, DatabaseType type) {
         if (host == null || user == null || password == null || database_name == null || type == null)
             throw new IllegalArgumentException("Arguments cannot be null");
         if (host.isBlank() || user.isBlank() || password.isBlank() || database_name.isBlank())
@@ -59,6 +58,10 @@ public class SQLConnector extends Connector{
     }
 
     public Connection getConnection() throws SQLException {
+        if (!is_connected()) {
+            if (!connect())
+                throw new IllegalStateException("Cannot connect to database!");
+        }
         return dataSource.getConnection();
     }
 
@@ -76,6 +79,7 @@ public class SQLConnector extends Connector{
     public boolean connect() {
         if (is_connected()) return true;
 
+        dataSource = new HikariDataSource(hikariConfig);
         try (Connection conn = dataSource.getConnection()) {
             return conn.isValid(get_connection_timeout());
         } catch (Exception e) {
@@ -89,6 +93,7 @@ public class SQLConnector extends Connector{
 
         try {
             dataSource.close();
+            dataSource = null;
             return true;
         } catch (Exception e) {
             return false;
